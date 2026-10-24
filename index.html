@@ -251,7 +251,7 @@ function quickOrder(btn){
  document.getElementById('orderDetails').value += name + ", ";
 }
 function orderWhatsApp(){
- let msg = "Hi Mma Mooki Store! Order: " + document.getElementById('orderDetails').value + " Name: " + document.getElementById('custName').value + " Phone: " + document.getElementById('custPhone').value;
+ let msg = "Hi Mma Mooki ! Order: " + document.getElementById('orderDetails').value + " Name: " + document.getElementById('custName').value + " Phone: " + document.getElementById('custPhone').value;
  window.open("https://wa.me/27695950887?text=" + encodeURIComponent(msg), "_blank");
 }
 loadData();
