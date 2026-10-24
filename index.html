@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mma Mooki's Store | Cakes & InkaWater</title>
+<style>
+:root{--pink:#ff6b9d;--blue:#00b4d8;--bg:#fffaf7}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:var(--bg);color:#222}
+header{padding:16px 20px;background:white;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:20}
+.logo{font-weight:800;font-size:20px}
+.btn{padding:10px 18px;border-radius:30px;border:none;font-weight:700;cursor:pointer}
+.btn-edit{background:#111;color:white}
+.hero{padding:40px 20px;text-align:center;background:linear-gradient(135deg,#fff0f5,#e0f7ff)}
+.hero h1{font-size:32px}
+.tabs{display:flex;gap:10px;justify-content:center;margin:24px 0;flex-wrap:wrap}
+.tab{padding:12px 26px;border-radius:30px;border:2px solid #ddd;background:white;font-weight:700;cursor:pointer}
+.tab.active{background:#111;color:white;border-color:#111}
+.module{display:none;max-width:1100px;margin:0 auto;padding:0 20px 40px}
+.module.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.card img{width:100%;height:180px;object-fit:cover;display:block}
+.card-body{padding:14px}
+.price{font-weight:800;font-size:18px;margin:6px 0}
+.order-section{background:white;margin:30px auto;max-width:600px;padding:22px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center}
+.order-section input,.order-section textarea{width:100%;padding:11px;border-radius:12px;border:1px solid #ddd;margin:6px 0}
+.whatsapp{background:#25D366;color:white;width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;margin-top:10px}
+#ownerDashboard{display:none;max-width:1100px;margin:0 auto;padding:20px;background:#111;color:white;border-radius:18px;margin-bottom:30px}
+#ownerDashboard.active{display:block}
+.dash-row{display:grid;grid-template-columns:1fr 70px 1fr 110px 40px;gap:8px;align-items:center;background:#222;padding:10px;border-radius:10px;margin-bottom:8px}
+.dash-row input{background:#333;color:white;border:1px solid #444;width:100%;padding:8px;border-radius:8px}
+.small-btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+.btn-del{background:#ff3b3b;color:white}
+.btn-add{background:var(--blue);color:white;padding:10px 16px;margin-top:8px}
+.btn-gallery{background:white;color:#111;width:100%;margin-top:4px}
+.gallery-preview{width:60px;height:60px;border-radius:8px;object-fit:cover;border:1px solid #555;display:block}
+input[type=file]{display:none}
+#loginModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+#loginModal.active{display:flex}
+.login-box{background:white;padding:24px;border-radius:20px;width:90%;max-width:340px;text-align:center}
+.login-box input{margin:12px 0;width:100%;padding:12px;border-radius:12px;border:1px solid #ddd}
+.login-btns{display:flex;gap:10px;margin-top:10px}
+.login-btns button{flex:1;padding:12px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
+.btn-cancel{background:#eee}
+.btn-ok{background:#111;color:white}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Mma Mooki's Store</div>
+<button class="btn btn-edit" onclick="openLogin()">Owner Login</button>
+</header>
+
+<div class="hero">
+<h1>Mma Mooki's Store</h1>
+<p>Fresh Cakes & Pure InkaWater | Delft South, 7100<br>72 Hrs Cake Delivery | 24 Hrs Water Delivery | 75% Deposit for Cakes | Fee for Delivery</p>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="showModule('cakes',this)">Cakes</button>
+<button class="tab" onclick="showModule('inkawater',this)">InkaWater</button>
+</div>
+
+<div id="ownerDashboard">
+<h2>Owner Dashboard <button onclick="closeDash()" style="float:right" class="small-btn">Close X</button></h2>
+<p style="opacity:.7;font-size:13px;margin:8px 0">Gallery upload auto-compresses. Unlimited photos.</p>
+<h3>Cakes</h3>
+<div id="dashCakes"></div>
+<button class="small-btn btn-add" onclick="addProduct('cakes')">+ Add Cake</button>
+<h3 style="margin-top:16px">InkaWater</h3>
+<div id="dashWater"></div>
+<button class="small-btn btn-add" onclick="addProduct('water')">+ Add Water</button>
+</div>
+
+<div id="cakes" class="module active"><h2>Cakes</h2><div class="grid" id="cakesGrid"></div></div>
+<div id="inkawater" class="module"><h2>InkaWater</h2><div class="grid" id="waterGrid"></div></div>
+
+<div class="order-section">
+<h3>Quick Order</h3>
+<input id="custName" placeholder="Your name">
+<input id="custPhone" placeholder="Phone">
+<textarea id="orderDetails" placeholder="What do you want?"></textarea>
+<button class="whatsapp" onclick="orderWhatsApp()">Order on WhatsApp</button>
+</div>
+
+<div id="loginModal">
+<div class="login-box">
+<h3>Owner Login</h3>
+<p style="font-size:14px;opacity:.7">Enter password</p>
+<input type="password" id="pwdInput" placeholder="Password">
+<div class="login-btns">
+<button class="btn-cancel" onclick="closeLogin()">Cancel</button>
+<button class="btn-ok" onclick="checkLogin()">OK</button>
+</div>
+<p id="loginError" style="color:red;font-size:13px;margin-top:8px;display:none">Wrong password</p>
+</div>
+</div>
+
+<script>
+let db;
+let data = {cakes:[],water:[]};
+
+function openDB(){
+ return new Promise(function(res){
+  let r = indexedDB.open('MmaMookiDB',1);
+  r.onupgradeneeded = function(e){ e.target.result.createObjectStore('store') };
+  r.onsuccess = function(e){ db = e.target.result; res() };
+ });
+}
+function idbSet(k,v){
+ return new Promise(function(res){
+  let t = db.transaction('store','readwrite');
+  t.objectStore('store').put(v,k);
+  t.oncomplete = function(){ res() };
+ });
+}
+function idbGet(k){
+ return new Promise(function(res){
+  let t = db.transaction('store','readonly');
+  let req = t.objectStore('store').get(k);
+  req.onsuccess = function(){ res(req.result) };
+ });
+}
+
+async function loadData(){
+ await openDB();
+ let saved = await idbGet('mmaData');
+ if(!saved){
+  try{ saved = JSON.parse(localStorage.getItem('mmaData')||'null') }catch(e){}
+ }
+ if(!saved){
+  saved = {
+   cakes:[
+    {name:"Chocolate Heaven",price:350,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400",desc:"Rich chocolate"},
+    {name:"Vanilla Dream",price:320,img:"https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400",desc:"Soft vanilla"},
+    {name:"Red Velvet",price:380,img:"https://images.unsplash.com/photo-1588195538326-c8b1ebc27a4d?w=400",desc:"Red velvet"},
+    {name:"Cupcakes (6pcs)",price:180,img:"https://images.unsplash.com/photo-1599785209707-a456fc1337bb?w=400",desc:"Assorted"}
+   ],
+   water:[
+    {name:"500ml Bottle (12 pack)",price:95,img:"https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400",desc:"Pure water"},
+    {name:"5L Bottle",price:35,img:"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400",desc:"Family size"},
+    {name:"19L Dispenser Bottle",price:120,img:"https://images.unsplash.com/photo-1523369364227-2498b77ea08e?w=400",desc:"Office/home"}
+   ]
+  };
+ }
+ data = saved;
+ render();
+}
+
+async function saveData(){
+ await idbSet('mmaData',data);
+ try{ localStorage.setItem('mmaData', JSON.stringify(data).substring(0,3000000)) }catch(e){}
+}
+
+function compressImage(file){
+ return new Promise(function(resolve){
+  let reader = new FileReader();
+  reader.onload = function(e){
+   let img = new Image();
+   img.onload = function(){
+    let maxW = 800;
+    let w = img.width, h = img.height;
+    if(w > maxW){ h = h * (maxW / w); w = maxW }
+    let c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    resolve(c.toDataURL('image/jpeg',0.65));
+   };
+   img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
+
+async function uploadImage(input,type,index){
+ let file = input.files[0];
+ if(!file) return;
+ let comp = await compressImage(file);
+ if(type==='cakes') data.cakes[index].img = comp;
+ else data.water[index].img = comp;
+ await saveData();
+ render();
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function attr(s){ return String(s).replace(/"/g,'&quot;') }
+
+function render(){
+ let cg = document.getElementById('cakesGrid');
+ cg.innerHTML = '';
+ for(let c of data.cakes){
+  cg.innerHTML += '<div class="card"><img src="'+c.img+'"><div class="card-body"><b>'+esc(c.name)+'</b><p style="font-size:13px;color:#666">'+esc(c.desc)+'</p><div class="price">R '+c.price+'</div></div></div>';
+ }
+ let wg = document.getElementById('waterGrid');
+ wg.innerHTML = '';
+ for(let c of data.water){
+  wg.innerHTML += '<div class="card"><img src="'+c.img+'"><div class="card-body"><b>'+esc(c.name)+'</b><p style="font-size:13px;color:#666">'+esc(c.desc)+'</p><div class="price">R '+c.price+'</div><button class="btn" style="background:var(--blue);color:white;width:100%;margin-top:8px" onclick="quickOrder(this)" data-name="'+attr(c.name)+'">Add</button></div></div>';
+ }
+ renderAdmin();
+}
+
+function renderAdmin(){
+ let dc = document.getElementById('dashCakes');
+ dc.innerHTML = '';
+ data.cakes.forEach(function(c,i){
+  dc.innerHTML += '<div class="dash-row"><input value="'+attr(c.name)+'" oninput="editField(\'cakes\','+i+',\'name\',this.value)"><input type="number" value="'+c.price+'" oninput="editField(\'cakes\','+i+',\'price\',this.value)"><input value="'+attr(c.desc)+'" oninput="editField(\'cakes\','+i+',\'desc\',this.value)"><div><img src="'+c.img+'" class="gallery-preview"><button class="small-btn btn-gallery" onclick="document.getElementById(\'file-cakes-'+i+'\').click()">Gallery</button><input type="file" id="file-cakes-'+i+'" accept="image/*" onchange="uploadImage(this,\'cakes\','+i+')"></div><button class="small-btn btn-del" onclick="delProduct(\'cakes\','+i+')">X</button></div>';
+ });
+ let dw = document.getElementById('dashWater');
+ dw.innerHTML = '';
+ data.water.forEach(function(c,i){
+  dw.innerHTML += '<div class="dash-row"><input value="'+attr(c.name)+'" oninput="editField(\'water\','+i+',\'name\',this.value)"><input type="number" value="'+c.price+'" oninput="editField(\'water\','+i+',\'price\',this.value)"><input value="'+attr(c.desc)+'" oninput="editField(\'water\','+i+',\'desc\',this.value)"><div><img src="'+c.img+'" class="gallery-preview"><button class="small-btn btn-gallery" onclick="document.getElementById(\'file-water-'+i+'\').click()">Gallery</button><input type="file" id="file-water-'+i+'" accept="image/*" onchange="uploadImage(this,\'water\','+i+')"></div><button class="small-btn btn-del" onclick="delProduct(\'water\','+i+')">X</button></div>';
+ });
+}
+
+function editField(type,i,field,val){
+ if(type==='cakes') data.cakes[i][field]=val;
+ else data.water[i][field]=val;
+ saveData();
+}
+
+function showModule(id,btn){
+ document.querySelectorAll('.module').forEach(function(m){m.classList.remove('active')});
+ document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+ document.getElementById(id).classList.add('active');
+ if(btn) btn.classList.add('active');
+}
+function openLogin(){ document.getElementById('loginModal').classList.add('active'); document.getElementById('pwdInput').value=''; document.getElementById('pwdInput').focus() }
+function closeLogin(){ document.getElementById('loginModal').classList.remove('active'); document.getElementById('loginError').style.display='none' }
+function checkLogin(){
+ let pwd = document.getElementById('pwdInput').value;
+ if(pwd==='mooki26'){ closeLogin(); document.getElementById('ownerDashboard').classList.add('active'); window.scrollTo(0,0) }
+ else{ document.getElementById('loginError').style.display='block' }
+}
+function closeDash(){ document.getElementById('ownerDashboard').classList.remove('active') }
+function addProduct(t){
+ if(t==='cakes') data.cakes.push({name:"New Cake",price:100,img:"https://via.placeholder.com/400",desc:"New"});
+ else data.water.push({name:"New Water",price:50,img:"https://via.placeholder.com/400",desc:"New"});
+ saveData(); render();
+}
+function delProduct(t,i){
+ if(confirm('Delete?')){
+  if(t==='cakes') data.cakes.splice(i,1);
+  else data.water.splice(i,1);
+  saveData(); render();
+ }
+}
+function quickOrder(btn){
+ let name = btn.getAttribute('data-name');
+ document.getElementById('orderDetails').value += name + ", ";
+}
+function orderWhatsApp(){
+ let msg = "Hi Mma Mooki Store! Order: " + document.getElementById('orderDetails').value + " Name: " + document.getElementById('custName').value + " Phone: " + document.getElementById('custPhone').value;
+ window.open("https://wa.me/27695950887?text=" + encodeURIComponent(msg), "_blank");
+}
+loadData();
+</script>
+</body>
+</html>
