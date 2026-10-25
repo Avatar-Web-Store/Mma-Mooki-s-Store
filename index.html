@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mma Mooki's Store | Cakes & InkaWater</title>
+<title>Mamzoo Store | Cakes & InkaWater</title>
 <style>
 :root{--pink:#ff6b9d;--blue:#00b4d8;--bg:#fffaf7}
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
@@ -49,12 +49,12 @@ input[type=file]{display:none}
 </head>
 <body>
 <header>
-<div class="logo">Mma Mooki's Store</div>
+<div class="logo">Mamzoo Store</div>
 <button class="btn btn-edit" onclick="openLogin()">Owner Login</button>
 </header>
 
 <div class="hero">
-<h1>Mma Mooki's Store</h1>
+<h1>Mamzoo Store</h1>
 <p>Fresh Cakes & Pure InkaWater | Delft South, 7100<br>72 Hrs Cake Delivery | 24 Hrs Water Delivery | 75% Deposit for Cakes | Fee for Delivery</p>
 </div>
 
@@ -104,7 +104,7 @@ let data = {cakes:[],water:[]};
 
 function openDB(){
  return new Promise(function(res){
-  let r = indexedDB.open('MmaMookiDB',1);
+  let r = indexedDB.open('MamzooDB',1);
   r.onupgradeneeded = function(e){ e.target.result.createObjectStore('store') };
   r.onsuccess = function(e){ db = e.target.result; res() };
  });
@@ -251,7 +251,7 @@ function quickOrder(btn){
  document.getElementById('orderDetails').value += name + ", ";
 }
 function orderWhatsApp(){
- let msg = "Hi Mma Mooki ! Order: " + document.getElementById('orderDetails').value + " Name: " + document.getElementById('custName').value + " Phone: " + document.getElementById('custPhone').value;
+ let msg = "Hi Mamzoo ! Order: " + document.getElementById('orderDetails').value + " Name: " + document.getElementById('custName').value + " Phone: " + document.getElementById('custPhone').value;
  window.open("https://wa.me/27695950887?text=" + encodeURIComponent(msg), "_blank");
 }
 loadData();
